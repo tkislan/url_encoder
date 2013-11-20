@@ -47,20 +47,25 @@ const char kHexToNum[] = {
 
 class UrlEncoder {
  public:
-  static inline void Encode(const std::string &in, std::string *out) {
+  static inline void Encode(const std::string &in, std::string *out, bool uppercase = false) {
     std::stringstream ss;
 
     for (std::string::const_iterator it = in.begin(); it != in.end(); ++it) {
-      if (kUnreservedChar[*it]) ss << *it;
-      else ss << '%' << std::setfill('0') << std::hex << (int)*it;
+      if (kUnreservedChar[*it]) {
+        ss << *it;
+      } else {
+        ss << '%' << std::setfill('0') << std::hex;
+        if (uppercase) ss << std::uppercase;
+        ss << (int)*it;
+      }
     }
 
     out->assign(ss.str());
   }
 
-  static inline std::string Encode(const std::string &in) {
+  static inline std::string Encode(const std::string &in, bool uppercase = false) {
     std::string out;
-    Encode(in, &out);
+    Encode(in, &out, uppercase);
     return out;
   }
 
